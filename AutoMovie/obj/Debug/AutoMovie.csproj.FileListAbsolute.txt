@@ -1,0 +1,17 @@
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\bin\Debug\AutoMovie.exe.config
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\bin\Debug\AutoMovie.exe
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\bin\Debug\AutoMovie.pdb
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\AutoMovie.csprojResolveAssemblyReference.cache
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\MainWindow.g.cs
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\App.g.cs
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\AutoMovie_MarkupCompile.cache
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\AutoMovie_MarkupCompile.lref
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\MainWindow.baml
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\AutoMovie.g.resources
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\AutoMovie.Properties.Resources.resources
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\AutoMovie.csproj.GenerateResource.Cache
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\AutoMovie.csproj.CoreCompileInputs.cache
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\AutoMovie.exe
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\AutoMovie.pdb
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\MotorDlg.g.cs
+C:\Users\dongchao\Documents\code\AutoMovie\AutoMovie\obj\Debug\MotorDlg.baml
