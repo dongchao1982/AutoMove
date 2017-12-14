@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -24,63 +26,29 @@ namespace AutoMovie
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<Motor> m_lstMotors = null;
-        private SerialPort m_port = null;
-        int m_portFrequency = 57600;
-
         public string Output { get; set; }
-        private string m_strOutputLine;
-
-        private MotorDlg m_motorDlg = null;
-
-        private DispatcherTimer m_timer = new DispatcherTimer();
-
-        private KeyFrame m_KeyFrame = null;
-
-        private KeyFrameControl m_KeyFrameCtrl = null;
-
-        private int m_OldTimeTickCount = 0;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            m_lstMotors = new List<Motor>()
-                {
-                    new Motor() { Name = "轨道",Index = 7,Position=0,Enable=true,Speed=10000,Moving=false },
-                    new Motor() { Name = "云台旋转",Index = 5,Position=0,Enable=true,Speed=10000,Moving=false },
-                    new Motor() { Name = "云台俯仰",Index = 6,Position=0,Enable=true,Speed=10000,Moving=false },
-                    new Motor() { Name = "调焦1",Index = 2,Position=0,Enable=true,Speed=1000,Moving=false },
-                    new Motor() { Name = "调焦2",Index = 3,Position=0,Enable=true,Speed=1000,Moving=false },
-                };
-            m_lstboxMotor.DataContext = m_lstMotors;
+            m_TimeLineControl = new TimeLineControl();
+            m_TimeLineControl.initFormConfig();
+
+//             m_lstMotors = new List<Motor>()
+//                 {
+//                     new Motor() { Name = "轨道",Index = 7,Position=0,isEnable=true,Speed=10000,isMoving=false },
+//                     new Motor() { Name = "云台旋转",Index = 5,Position=0,isEnable=true,Speed=10000,isMoving=false },
+//                     new Motor() { Name = "云台俯仰",Index = 6,Position=0,isEnable=true,Speed=10000,isMoving=false },
+//                     new Motor() { Name = "调焦1(调焦)",Index = 2,Position=0,isEnable=true,Speed=1000,isMoving=false },
+//                     //new Motor() { Name = "调焦2(对焦)",Index = 3,Position=0,isEnable=true,Speed=1000,isMoving=false },
+//                 };
+//             m_lstboxMotor.DataContext = m_lstMotors;
 
             refreshPort();
 
-            m_btnInitial.IsEnabled = m_port == null;
-            m_btnDispose.IsEnabled = m_port != null;
-
-            m_strOutputLine = "";
-
-            m_timer.Tick += new EventHandler(LogicUpdate);
-            m_timer.Interval = TimeSpan.FromSeconds(0.05);
-
-            m_KeyFrame = new KeyFrame();
-            m_KeyFrameCtrl = new KeyFrameControl();
-        }
-
-        void LogicUpdate(object sender, EventArgs e)
-        {
-            int dt = Environment.TickCount - m_OldTimeTickCount;
-
-            if (m_port!=null)
-            {
-                m_port.WriteLine("ms\r\n");
-            }
-
-            m_KeyFrameCtrl.logic(dt);
-
-            m_OldTimeTickCount = Environment.TickCount;
+            m_btnInitial.IsEnabled = !m_SerialPortControl.isOK();
+            m_btnDispose.IsEnabled = m_SerialPortControl.isOK();
         }
 
         private Motor findMotor(String name)
@@ -113,10 +81,11 @@ namespace AutoMovie
 
         private void refreshPort()
         {
-            string[] ports = SerialPort.GetPortNames();
-            for (int i = 0; i < ports.Length; ++i)
+            string[] portName = SerialPortControl.getPortName();
+            m_comboList.Items.Clear();
+            foreach(string name in portName)
             {
-                m_comboList.Items.Add(ports[i]);
+                m_comboList.Items.Add(name);
             }
             m_comboList.SelectedIndex = m_comboList.Items.Count - 1;
         }
@@ -219,11 +188,11 @@ namespace AutoMovie
                         if (motor != null)
                         {
                             bool bMoving = param[i] == '1' ? true : false;
-                            if (motor.Moving != bMoving)
+                            if (motor.isMoving != bMoving)
                             {
                                 Action<Motor, bool> updateAction = new Action<Motor, bool>(delegate (Motor m, bool b)
                                 {
-                                    m.Moving = b;
+                                    m.isMoving = b;
                                     for (int idx = 0; idx < m_lstMotors.Count; ++idx)
                                     {
                                         var item = m_lstboxMotor.ItemContainerGenerator.ContainerFromIndex(idx);
@@ -231,7 +200,7 @@ namespace AutoMovie
                                         if (txtIndex.Text == m.Index.ToString())
                                         {
                                             Button btn = WPFHelper.GetChildObject<Button>(item, "btnMoving");
-                                            btn.IsEnabled = m.Moving;
+                                            btn.IsEnabled = m.isMoving;
                                         }
                                     }
                                 });
@@ -304,9 +273,9 @@ namespace AutoMovie
             });
             this.Dispatcher.BeginInvoke(updateAction, motor);
 
-            if (m_motorDlg != null && m_motorDlg.m_motor.Index == motor.Index)
+            if (m_MotorDlg != null && m_MotorDlg.m_motor.Index == motor.Index)
             {
-                m_motorDlg.setPosition();
+                m_MotorDlg.setPosition();
             }
         }
 
@@ -319,9 +288,9 @@ namespace AutoMovie
             {
                 MotorDlg dlg = new MotorDlg(motor);
                 dlg.Owner = this;
-                m_motorDlg = dlg;
+                m_MotorDlg = dlg;
                 dlg.ShowDialog();
-                m_motorDlg = null;
+                m_MotorDlg = null;
             }
         }
 
@@ -332,28 +301,8 @@ namespace AutoMovie
             Motor motor = findMotor((string)itemPanel.Tag);
             if (motor != null)
             {
-                int moveType = -1;
-                if (btn.Name == "LeftMove")
-                {
-                    moveType = 1;
-                }
-                else if (btn.Name == "LeftMoveStep")
-                {
-                    moveType = 2;
-                }
-                else if (btn.Name == "RightMoveStep")
-                {
-                    moveType = 3;
-                }
-                else if (btn.Name == "RightMove")
-                {
-                    moveType = 4;
-                }
-
-                if (moveType != -1)
-                {
-                    motor.moveStart(moveType);
-                }
+                Motor.eMoveType eMoveType = Motor.convertMoveType(btn.Name);
+                motor.setpMoveStart(eMoveType);
             }
         }
 
@@ -364,8 +313,7 @@ namespace AutoMovie
             Motor motor = findMotor((string)itemPanel.Tag);
             if (motor != null)
             {
-                motor.moveStop();
-                motor.stop();
+                motor.setpMoveStop();
             }
         }
 
@@ -376,7 +324,7 @@ namespace AutoMovie
             Motor motor = findMotor((string)itemPanel.Tag);
             if (motor != null)
             {
-                motor.move(0);
+                motor.setPosition(0);
             }
         }
 
@@ -403,6 +351,8 @@ namespace AutoMovie
             InitialSerialPort();
             m_btnInitial.IsEnabled = m_port == null;
             m_btnDispose.IsEnabled = m_port != null;
+
+            output("hello auto movie.\r\n");
         }
 
         private void DisposeSerialPortClick(object sender, RoutedEventArgs e)
@@ -468,6 +418,25 @@ namespace AutoMovie
             }
         }
 
+        private void UpdateKeyClick(object sender, RoutedEventArgs e)
+        {
+            if(lstBoxKeyFrame.SelectedIndex!=-1)
+            {
+                int index = lstBoxKeyFrame.SelectedIndex;
+                foreach (Motor m in m_lstMotors)
+                {
+                    MotorData key = new MotorData();
+                    key.Name = m.Name;
+                    key.Position = m.Position;
+                    key.Speed = m.Speed;
+                    m_KeyFrame.updateKeyAtIndex(index,key);
+                }
+                lstBoxKeyFrame.ItemsSource = null;
+                lstBoxKeyFrame.ItemsSource = m_KeyFrame.m_lstKeys;
+                lstBoxKeyFrame.SelectedIndex = index;
+            }
+        }
+
         private void ClearKeyClick(object sender, RoutedEventArgs e)
         {
             lstBoxKeyFrame.ItemsSource = null;
@@ -485,7 +454,7 @@ namespace AutoMovie
                     if(k!=null)
                     {
                         m.setPulseRate(k.Speed);
-                        m.move(k.Position);
+                        m.setPosition(k.Position);
                     }
                 }
             }
@@ -496,7 +465,7 @@ namespace AutoMovie
             //有运动的电机不准许播放
             foreach(Motor m in m_lstMotors)
             {
-                if(m.Moving)
+                if(m.isMoving)
                 {
                     return;
                 }
@@ -531,10 +500,114 @@ namespace AutoMovie
                     if(m!=null)
                     {
                         m.setPulseRate(item.Value.Speed);
-                        m.move(item.Value.Position);
+                        m.setPosition(item.Value.Position);
                     }
                 }
             }
         }
+
+        private void SaveFileClick(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.InitialDirectory = @"C:\";
+            dlg.Filter = "移动脚本|*.amf";
+            if (dlg.ShowDialog() == true)
+            {
+                try
+                {
+                    FileStream file = new FileStream(dlg.FileName, FileMode.OpenOrCreate);
+                    using (StreamWriter sw = new StreamWriter(file))
+                    {
+                        int line = 0;
+                        foreach (MotorKey key in m_KeyFrame.m_lstKeys)
+                        {
+                            line++;
+                            sw.WriteLine("#" + line);
+                            foreach(MotorData value in key.m_dicKeys.Values)
+                            {
+                                sw.WriteLine(value.Name);
+                                sw.WriteLine(value.Speed);
+                                sw.WriteLine(value.Position);
+                            }
+                        }
+                        sw.Flush();
+                    }
+                    file.Close();
+                }
+                catch (IOException ioe)
+                {
+                    Console.WriteLine(ioe.ToString());
+                }
+            }
+            else
+            {
+            }
+        }
+
+        private void ReadFileClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = @"C:\";
+            dlg.Filter = "移动脚本|*.amf";
+            if (dlg.ShowDialog() == true)
+            {
+                TimeLine kFrame = new TimeLine();
+                StreamReader sr = new StreamReader(dlg.FileName, Encoding.UTF8);
+                String line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    if(line.Length>0)
+                    {
+                        if(line[0] == '#')
+                        {
+                            kFrame.addKey();
+                        }
+                        else
+                        {
+                            MotorData key = new MotorData();
+                            key.Name = line;
+                            line = sr.ReadLine();
+                            if (line == null) continue;
+                            if (line.Length > 0)
+                            {
+                                key.Speed = Convert.ToInt32(line);
+                            }
+                            else
+                            {
+                                key.Speed = 0;
+                            }
+                            line = sr.ReadLine();
+                            if (line == null) continue;
+                            if(line.Length>0)
+                            {
+                                key.Position = Convert.ToInt32(line);
+                            }
+                            else
+                            {
+                                key.Position = 0;
+                            }
+                            kFrame.pushKeyAtLast(key);
+                        }
+                    }
+                }
+
+                if(kFrame.m_lstKeys.Count>0)
+                {
+                    m_KeyFrame = kFrame;
+                    lstBoxKeyFrame.ItemsSource = null;
+                    lstBoxKeyFrame.ItemsSource = m_KeyFrame.m_lstKeys;
+                    lstBoxKeyFrame.SelectedIndex = 0;
+                }
+            }
+            else
+            {
+            }
+        }
+
+        private SerialPortControl m_SerialPortControl = null;
+
+        private TimeLineControl m_TimeLineControl = null;
+
+        private MotorDlg m_MotorDlg = null;
     }
 }

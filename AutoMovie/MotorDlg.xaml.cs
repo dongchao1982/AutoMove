@@ -52,37 +52,18 @@ namespace AutoMovie
 
         private void ButtonMouseDown(object sender, MouseButtonEventArgs e)
         {
-            int moveType = -1;
+            
             Button btn = (Button)sender;
             if (m_motor != null)
             {
-                if (btn.Name == "LeftMove")
-                {
-                    moveType = 1;
-                }
-                else if (btn.Name == "LeftMoveStep")
-                {
-                    moveType = 2;
-                }
-                else if (btn.Name == "RightMoveStep")
-                {
-                    moveType = 3;
-                }
-                else if (btn.Name == "RightMove")
-                {
-                    moveType = 4;
-                }
-
-                if(moveType != -1)
-                {
-                    m_motor.moveStart(moveType);
-                }
+                Motor.eMoveType eMoveType = Motor.convertMoveType(btn.Name);
+                m_motor.setpMoveStart(eMoveType);
             }
         }
 
         private void ButtonMouseUp(object sender, MouseButtonEventArgs e)
         {
-            m_motor.moveStop();
+            m_motor.setpMoveStop();
             m_motor.stop();
         }
 
@@ -102,8 +83,16 @@ namespace AutoMovie
 
         private void SpeedTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Speed = Convert.ToInt32(((TextBox)sender).Text);
-            m_motor.setPulseRate(Speed);
+            TextBox text = (TextBox)sender;
+            if(text.Text.Length>0)
+            {
+                Speed = Convert.ToInt32(text.Text);
+                m_motor.setPulseRate(Speed);
+            }
+            else
+            {
+                m_motor.setPulseRate(0);
+            }
         }
 
         private void SpeedTextBox_KeyDown(object sender, KeyEventArgs e)

@@ -54,9 +54,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="KeyFrame.cs" />
-    <Compile Include="KeyFrameControl.cs" />
-    <Compile Include="Motor.cs" />
+    <Compile Include="code\SerialPortControl.cs" />
+    <Compile Include="code\TimeLineKey.cs" />
+    <Compile Include="code\TimeLineModel.cs" />
+    <Compile Include="code\TimeLineControl.cs" />
+    <Compile Include="code\Motor.cs" />
     <Compile Include="MotorDlg.xaml.cs">
       <DependentUpon>MotorDlg.xaml</DependentUpon>
     </Compile>

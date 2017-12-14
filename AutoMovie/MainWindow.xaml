@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoMovie"
         mc:Ignorable="d"
-        Title="自动化拍摄" Height="600" Width="1000">
+        Title="自动化拍摄" Height="800" Width="1200">
     <Grid>
         <DockPanel>
             <ToolBar DockPanel.Dock="Top">
@@ -51,19 +51,26 @@
                 <ToolBar>
                     <Button Width="Auto" Height="25" Margin="3" Click="AddKeyClick">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Center">插入关键帧</TextBlock>
+                            <TextBlock HorizontalAlignment="Center">插入帧</TextBlock>
                         </StackPanel>
                     </Button>
                     <Button Width="Auto" Height="25" Margin="3" Click="DelKeyClick">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Center">删除关键帧</TextBlock>
+                            <TextBlock HorizontalAlignment="Center">删除帧</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Width="Auto" Height="25" Margin="3" Click="UpdateKeyClick">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock HorizontalAlignment="Center">更新帧</TextBlock>
                         </StackPanel>
                     </Button>
                     <Button Width="Auto" Height="25" Margin="3" Click="ClearKeyClick">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Center">清空关键帧</TextBlock>
+                            <TextBlock HorizontalAlignment="Center">清空帧</TextBlock>
                         </StackPanel>
                     </Button>
+                    </ToolBar>
+                    <ToolBar>
                     <Button Width="Auto" Height="25" Margin="3" Click="GoHomeClick">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock HorizontalAlignment="Center">回起点</TextBlock>
@@ -72,6 +79,18 @@
                     <Button Width="Auto" Height="25" Margin="3" Click="PlayClick">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock HorizontalAlignment="Center">播放</TextBlock>
+                        </StackPanel>
+                    </Button>
+                        </ToolBar>
+                        <ToolBar>
+                            <Button Width="Auto" Height="25" Margin="3" Click="SaveFileClick">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock HorizontalAlignment="Center">保存</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Width="Auto" Height="25" Margin="3" Click="ReadFileClick">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock HorizontalAlignment="Center">读取</TextBlock>
                         </StackPanel>
                     </Button>
                 </ToolBar>
