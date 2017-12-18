@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="code\Cmd.cs" />
     <Compile Include="code\INI.cs" />
     <Compile Include="code\SerialPortControl.cs" />
     <Compile Include="code\TimeLineKey.cs" />

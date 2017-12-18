@@ -12,7 +12,7 @@
                 <TextBlock Margin="3" VerticalAlignment="Center">
                     串口列表:
                 </TextBlock>
-                <ComboBox Name="m_comboBox" Width="160" Margin="3"/>
+                <ComboBox Name="comboBoxPort" Width="160" Margin="3"/>
                 <Button Width="25" Height="25" Margin="3" Click="RefreshPortClick">
                     <Button.Content>
                         <Image Stretch="Fill" Source="Image/Refresh.png" />
@@ -35,6 +35,9 @@
                         <Image Stretch="Fill" Source="Image/kill.png" />
                         <TextBlock HorizontalAlignment="Center">停止全部电机</TextBlock>
                     </StackPanel>
+                </Button>
+                <Button Click="ButtonClipClick">
+                    <TextBlock HorizontalAlignment="Center">合成视频</TextBlock>
                 </Button>
             </ToolBar>
             <TabControl DockPanel.Dock="Bottom"  Margin="3" Height="200">

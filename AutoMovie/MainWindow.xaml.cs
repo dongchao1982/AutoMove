@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.IO;
 using System.IO.Ports;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -34,12 +36,12 @@ namespace AutoMovie
         private void refreshPort()
         {
             string[] portName = SerialPortControl.getPortName();
-            m_comboBox.Items.Clear();
+            comboBoxPort.Items.Clear();
             foreach(string name in portName)
             {
-                m_comboBox.Items.Add(name);
+                comboBoxPort.Items.Add(name);
             }
-            m_comboBox.SelectedIndex = m_comboBox.Items.Count - 1;
+            comboBoxPort.SelectedIndex = comboBoxPort.Items.Count - 1;
         }
 
         private void portDataReceived(object sender, string cmd)
@@ -207,12 +209,12 @@ namespace AutoMovie
 
         private void InitialSerialPortClick(object sender, RoutedEventArgs e)
         {
-            if(m_comboBox.SelectedItem==null)
+            if(comboBoxPort.SelectedItem==null)
             {
                 return;
             }
 
-            string portName = m_comboBox.SelectedItem.ToString();
+            string portName = comboBoxPort.SelectedItem.ToString();
             m_SerialPortControl.initial(portName, portDataReceived);
             m_TimeLineControl.initSerialPort(m_SerialPortControl);
 
@@ -381,5 +383,57 @@ namespace AutoMovie
         private SerialPortControl m_SerialPortControl = null;
         private TimeLineControl m_TimeLineControl = null;
         private MotorDlg m_MotorDlg = null;
+
+        private void ButtonClipClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            dlg.Filter = "视频文件|*.mov";
+            if (dlg.ShowDialog() == true)
+            {
+                OpenFileDialog dlg2 = new OpenFileDialog();
+                dlg2.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                dlg2.Filter = "配置文件|*.txt";
+                if(dlg2.ShowDialog() == true)
+                {
+                    String movFilename = dlg.FileName;
+                    String cfgFilename = dlg2.FileName;
+
+                    Cmd cmd = new Cmd();
+                    String strcmd;
+
+                    FileStream file = new FileStream("FileList.txt", FileMode.OpenOrCreate);
+                    using (StreamWriter sw = new StreamWriter(file))
+                    {
+                        StreamReader sr = new StreamReader(cfgFilename, Encoding.UTF8);
+                        String line;
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            String strFile = line.Trim();
+
+                            line = sr.ReadLine();
+                            String strBegin = line.Trim();
+
+                            line = sr.ReadLine();
+                            String strEnd = line.Trim();
+
+                            strcmd = "ffmpeg -y -i " + movFilename + " -ss " + strBegin + " -to " + strEnd + " -movflags +faststart -c copy " + strFile;
+                            cmd.RunCmd(strcmd);
+
+                            sw.Write("file '");
+                            sw.Write(AppDomain.CurrentDomain.BaseDirectory+strFile);
+                            sw.WriteLine("'");
+                            sw.Flush();
+                        }
+                    }
+                    file.Close();
+
+                    strcmd = "ffmpeg -y -f concat -safe 0 -i FileList.txt -movflags +faststart -c copy " + System.IO.Path.GetFileName(dlg.FileName);
+                    Console.WriteLine(strcmd);
+                    cmd.RunCmd(strcmd);
+                }
+            }
+            
+        }
     }
 }
