@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="code\INI.cs" />
     <Compile Include="code\SerialPortControl.cs" />
     <Compile Include="code\TimeLineKey.cs" />
     <Compile Include="code\TimeLineModel.cs" />
@@ -111,8 +112,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\home.png" />
-    <Resource Include="Image\右.png" />
-    <Resource Include="Image\快进右.png" />
+    <Resource Include="Image\right.png" />
+    <Resource Include="Image\fastright.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\Refresh.png" />

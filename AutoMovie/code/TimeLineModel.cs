@@ -20,20 +20,19 @@ namespace AutoMovie
 
         public void add(TimeLineKey key)
         {
+            if (m_lstKeys.Count > 0)
+            {
+                key.StartPositon = m_lstKeys[m_lstKeys.Count - 1].EndPosition;
+            }
             m_lstKeys.Add(key);
         }
 
-        public void updateAtIndex(int index, TimeLineKey key)
+        public void del(int index)
         {
-            if(index >=0 && index<m_lstKeys.Count)
+            if(index>=0 && index<m_lstKeys.Count)
             {
-                m_lstKeys[index] = key;
+                m_lstKeys.RemoveAt(index);
             }
-        }
-
-        public int getCount()
-        {
-            return m_lstKeys.Count;
         }
 
         public TimeLineKey get(int index)
@@ -43,6 +42,24 @@ namespace AutoMovie
                 return m_lstKeys[index];
             }
             return null;
+        }
+
+        public void update(int index, TimeLineKey key)
+        {
+            if(index >=0 && index<m_lstKeys.Count)
+            {
+                m_lstKeys[index] = key;
+            }
+        }
+
+        public int count()
+        {
+            return m_lstKeys.Count;
+        }
+
+        public List<TimeLineKey> gets()
+        {
+            return m_lstKeys;
         }
 
         private List<TimeLineKey> m_lstKeys;

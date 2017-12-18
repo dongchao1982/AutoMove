@@ -15,7 +15,7 @@
                 <TextBox Text="{Binding Path=Speed}" Name="SpeedTextBox" Margin="3" VerticalAlignment="Center" Width="65" TextChanged="SpeedTextBox_TextChanged" KeyDown="SpeedTextBox_KeyDown"></TextBox>
                 <Button Name="LeftMove" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp">
                     <Button.Content>
-                        <Image Stretch="Fill" Source="Image/快进右.png" >
+                        <Image Stretch="Fill" Source="Image/fastright.png" >
                             <Image.LayoutTransform>
                                 <TransformGroup>
                                     <ScaleTransform/>
@@ -29,7 +29,7 @@
                 </Button>
                 <Button Name="LeftMoveStep" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp">
                     <Button.Content>
-                        <Image Stretch="Fill" Source="Image/右.png" >
+                        <Image Stretch="Fill" Source="Image/right.png" >
                             <Image.LayoutTransform>
                                 <TransformGroup>
                                     <ScaleTransform/>
@@ -43,13 +43,13 @@
                 </Button>
                 <Button Name="RightMoveStep" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp">
                     <Button.Content>
-                        <Image Stretch="Fill" Source="Image/右.png" >
+                        <Image Stretch="Fill" Source="Image/right.png" >
                         </Image>
                     </Button.Content>
                 </Button>
                 <Button Name="RightMove" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp">
                     <Button.Content>
-                        <Image Stretch="Fill" Source="Image/快进右.png" />
+                        <Image Stretch="Fill" Source="Image/fastright.png" />
                     </Button.Content>
                 </Button>
             </StackPanel>

@@ -22,13 +22,20 @@ namespace AutoMovie
 
         /*控制变量*/
         //可控制
-        public bool isEnable { get; set; }
+        public bool isEnable { get {
+                return !isChecked;
+            }
+        }
         //反转电机方向
         public bool isReverse { get; set; }
         //移动状态
         public bool isMoving { get; set; }
+        //禁止操作
+        public bool isChecked { get; set; }
 
         /*属性*/
+        //类型名字
+        public string Alias { get; set; }
         //名称
         public string Name { get; set; }
         //索引
@@ -45,6 +52,10 @@ namespace AutoMovie
 
         public Motor()
         {
+            isChecked = false;
+            isReverse = false;
+            isMoving = false;
+
             m_Timer = new DispatcherTimer();
             m_Timer.Interval = TimeSpan.FromSeconds(0.1);
             m_EventHandler = null;
@@ -77,6 +88,7 @@ namespace AutoMovie
             if (m_EventHandler != null)
             {
                 m_Timer.Tick += m_EventHandler;
+                m_Timer.Start();
             }
         }
 

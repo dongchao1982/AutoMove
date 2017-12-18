@@ -53,6 +53,11 @@ namespace AutoMovie
                 Port.Encoding = Encoding.ASCII;
                 Port.DataReceived += receivedData;
                 Port.Open();
+
+                if(Port.IsOpen)
+                {
+                    Port.WriteLine("hi\r\n");
+                }
             }
             catch (Exception ex)
             {
@@ -100,7 +105,7 @@ namespace AutoMovie
             return value;
         }
 
-        void receivedData(object sender, SerialDataReceivedEventArgs e)
+        public void receivedData(object sender, SerialDataReceivedEventArgs e)
         {
             string value = readData();
             m_strReceivedBuffer += value;

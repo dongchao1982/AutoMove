@@ -1,4 +1,6 @@
 AutoMovie/obj
+AutoMovie/bin
+.vs
 *.pdb
 *.exe
 *.exe.config

@@ -12,7 +12,7 @@
                 <TextBlock Margin="3" VerticalAlignment="Center">
                     串口列表:
                 </TextBlock>
-                <ComboBox Name="m_comboList" Width="160" Margin="3"/>
+                <ComboBox Name="m_comboBox" Width="160" Margin="3"/>
                 <Button Width="25" Height="25" Margin="3" Click="RefreshPortClick">
                     <Button.Content>
                         <Image Stretch="Fill" Source="Image/Refresh.png" />
@@ -47,7 +47,7 @@
                     </DockPanel>
                 </TabItem>
             </TabControl>
-            <StackPanel DockPanel.Dock="Left" Margin="3" Width="450" HorizontalAlignment="Left" >
+            <StackPanel DockPanel.Dock="Left" Margin="3" Width="490" HorizontalAlignment="Left" >
                 <ToolBar>
                     <Button Width="Auto" Height="25" Margin="3" Click="AddKeyClick">
                         <StackPanel Orientation="Horizontal">
@@ -94,11 +94,11 @@
                         </StackPanel>
                     </Button>
                 </ToolBar>
-                <ListBox ItemsSource="{Binding .}" Name="m_lstboxMotor">
+                <ListBox ItemsSource="{Binding .}" Name="lstboxMotor" SelectionChanged="MotorSelectionChanged">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Name="ItemPanel" Tag="{Binding Name}" Orientation="Horizontal">
-                                <Button Name="btnMoving" Width="25" Height="25" Margin="3" Background="#FF706C6C" IsEnabled="{Binding Moving}">
+                            <StackPanel Name="itemPanel" Tag="{Binding Name}" Orientation="Horizontal" >
+                                <Button Name="btnMoving" Width="25" Height="25" Margin="3" Background="#FF706C6C" IsEnabled="{Binding isMoving}">
                                     <Button.Style>
                                         <Style TargetType="{x:Type Button}">
                                             <Setter Property="Template">
@@ -125,9 +125,9 @@
                                 <TextBlock Text="{Binding Name}" FontSize="16" Width="100" Margin="3" Foreground="#FFECE2E2" VerticalAlignment="Center" MouseLeftButtonDown="NameMouseLeftButtonDown"></TextBlock>
                                 <TextBlock Name="txtBlockIndex" Text="{Binding Index}" FontSize="16" MaxWidth="30" Margin="3" Foreground="#FFECE2E2" VerticalAlignment="Center"></TextBlock>
                                 <StackPanel Orientation="Horizontal" Margin="3" VerticalAlignment="Center">
-                                    <Button Name="LeftMove" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp" IsEnabled="{Binding Enable}">
+                                    <Button Name="LeftMove" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp" IsEnabled="{Binding isEnable}">
                                         <Button.Content>
-                                            <Image Stretch="Fill" Source="Image/快进右.png" >
+                                            <Image Stretch="Fill" Source="Image/fastright.png" >
                                                 <Image.LayoutTransform>
                                                     <TransformGroup>
                                                         <ScaleTransform/>
@@ -139,9 +139,9 @@
                                             </Image>
                                         </Button.Content>
                                     </Button>
-                                    <Button Name="LeftMoveStep" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp" IsEnabled="{Binding Enable}">
+                                    <Button Name="LeftMoveStep" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp" IsEnabled="{Binding isEnable}">
                                         <Button.Content>
-                                            <Image Stretch="Fill" Source="Image/右.png" >
+                                            <Image Stretch="Fill" Source="Image/right.png" >
                                                 <Image.LayoutTransform>
                                                     <TransformGroup>
                                                         <ScaleTransform/>
@@ -153,30 +153,33 @@
                                             </Image>
                                         </Button.Content>
                                     </Button>
-                                    <Button Name="RightMoveStep" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp" IsEnabled="{Binding Enable}">
+                                    <Button Name="RightMoveStep" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp" IsEnabled="{Binding isEnable}">
                                         <Button.Content>
-                                            <Image Stretch="Fill" Source="Image/右.png" >
+                                            <Image Stretch="Fill" Source="Image/right.png" >
                                             </Image>
                                         </Button.Content>
                                     </Button>
-                                    <Button Name="RightMove" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp" IsEnabled="{Binding Enable}">
+                                    <Button Name="RightMove" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp" IsEnabled="{Binding isEnable}">
                                         <Button.Content>
-                                            <Image Stretch="Fill" Source="Image/快进右.png" />
+                                            <Image Stretch="Fill" Source="Image/fastright.png" />
                                         </Button.Content>
                                     </Button>
                                 </StackPanel>
-                                <Button Name="Home" Width="25" Height="25" Margin="3" Background="#FF706C6C" Click="MotorHomeClick" IsEnabled="{Binding Enable}">
+                                <Button Width="25" Height="25" Margin="3" Background="#FF706C6C" Click="MotorHomeClick" IsEnabled="{Binding isEnable}">
                                     <Button.Content>
                                         <Image Stretch="Fill" Source="Image/home.png" />
                                     </Button.Content>
                                 </Button>
                                 <TextBlock Name="txtBlockPosition" Text="{Binding Position}" FontSize="16" Width="50" Margin="3" Foreground="#FFECE2E2" VerticalAlignment="Center" HorizontalAlignment="Right"></TextBlock>
-                                <Button Name="Clear" Width="25" Height="25" Margin="3" Background="#FF706C6C" Click="ClearClick" IsEnabled="{Binding Enable}">
+                                <Button Width="25" Height="25" Margin="3" Background="#FF706C6C" Click="ClearClick" IsEnabled="{Binding isEnable}">
                                     <Button.Content>
                                         <Image Stretch="Fill" Source="Image/clear.png" />
                                     </Button.Content>
                                 </Button>
-                                <ToggleButton Width="25" Height="25" Margin="3" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FF706C6C" IsChecked="{Binding Enable}" Click="MotorToggleClick">
+                                <CheckBox Width="40" Height="25" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF706C6C" IsChecked="{Binding isReverse}">
+                                    反转
+                                </CheckBox>
+                                <ToggleButton Width="25" Height="25" Margin="3" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FF706C6C" Click="MotorToggleClick" IsChecked="{Binding isChecked}">
                                     <ToggleButton.Content>
                                         <Image Stretch="Fill" Source="Image/power.png" />
                                     </ToggleButton.Content>
@@ -210,9 +213,6 @@
             </StackPanel>
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Margin="3">关键帧</TextBlock>
-                <ListBox Width="150" Name="lstBoxKeyFrame" DisplayMemberPath="Name" SelectionChanged="lstBoxKeyFrame_SelectionChanged" PreviewMouseDoubleClick="lstBoxKeyFrame_PreviewMouseDoubleClick">
-                    
-                </ListBox>
                 <ListBox MinWidth="150" Name="lstBoxMotorKey">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -221,10 +221,14 @@
                                     <ColumnDefinition Width="80"></ColumnDefinition>
                                     <ColumnDefinition MinWidth="80"></ColumnDefinition>
                                     <ColumnDefinition MinWidth="80"></ColumnDefinition>
+                                    <ColumnDefinition MinWidth="80"></ColumnDefinition>
+                                    <ColumnDefinition MinWidth="80"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Path=Value.Name,Mode=OneWay}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Path=Value.Position,Mode=OneWay}"/>
-                                <TextBlock Grid.Column="2" Text="{Binding Path=Value.Speed,Mode=OneWay}"/>
+                                <TextBlock Grid.Column="0" Text="{Binding Path=StartPositon,Mode=OneWay}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Path=EndPosition,Mode=OneWay}"/>
+                                <TextBlock Grid.Column="2" Text="{Binding Path=Distance,Mode=OneWay}"/>
+                                <TextBlock Grid.Column="3" Text="{Binding Path=Speed,Mode=OneWay}"/>
+                                <TextBlock Grid.Column="4" Text="{Binding Path=Time,Mode=OneWay}"/>
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

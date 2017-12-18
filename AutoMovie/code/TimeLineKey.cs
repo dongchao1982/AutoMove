@@ -12,14 +12,20 @@ namespace AutoMovie
         public int StartPositon { get; set; }
         public int EndPosition { get; set; }
 
-        public int getDistance()
+        public int Distance
         {
-            return EndPosition - StartPositon;
+            get
+            {
+                return EndPosition - StartPositon;
+            }
         }
 
-        public int getTime()
+        public int Time
         {
-            return Math.Abs(getDistance()) / Speed * 1000;
+            get
+            {
+                return (int)(((double)Math.Abs(Distance) / (double)Speed * 1000.0));
+            }
         }
     }
 }
