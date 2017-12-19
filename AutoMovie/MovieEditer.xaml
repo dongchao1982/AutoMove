@@ -1,0 +1,30 @@
+﻿<Window x:Class="AutoMovie.MovieEditer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoMovie"
+        mc:Ignorable="d"
+        Title="MovieEditer" Height="768" Width="1024">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="67*"/>
+            <RowDefinition Height="56*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="237*"/>
+            <ColumnDefinition Width="271*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="0" Grid.Column="1">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                <Button Margin="20,0,20,0">
+                    add begin
+                </Button>
+                <Button Margin="20,0,20,0">
+                    add end
+                </Button>
+            </StackPanel>
+            <local:MovieControl/>
+        </DockPanel>
+    </Grid>
+</Window>

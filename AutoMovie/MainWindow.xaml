@@ -39,6 +39,9 @@
                 <Button Click="ButtonClipClick">
                     <TextBlock HorizontalAlignment="Center">合成视频</TextBlock>
                 </Button>
+                <Button Click="Button_Click">
+                    TEST
+                </Button>
             </ToolBar>
             <TabControl DockPanel.Dock="Bottom"  Margin="3" Height="200">
                 <TabItem Header="输出">

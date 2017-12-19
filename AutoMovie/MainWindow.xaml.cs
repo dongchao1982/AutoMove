@@ -435,5 +435,11 @@ namespace AutoMovie
             }
             
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MovieEditer me = new MovieEditer();
+            me.ShowDialog();
+        }
     }
 }
