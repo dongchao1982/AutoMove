@@ -36,7 +36,7 @@
         </StackPanel>
         <Slider Name="sldYaw" ValueChanged="sldYaw_ValueChanged" MouseDoubleClick="sldYaw_MouseDoubleClick" Margin="5,5,10,5" Grid.Row="3" Grid.Column="1" Minimum="-90" Maximum="90" IsSnapToTickEnabled="True" TickPlacement="Both" TickFrequency="5"/>
         <Canvas Name="cavPanel" Loaded="cavPanel_Loaded" SizeChanged="cavPanel_SizeChanged"  Margin="5,5,10,5" Grid.Row="1" Grid.Column="1"  Background="LightYellow" ClipToBounds="True">
-            <Rectangle Name="rectTarget" Fill="Blue" Stroke="Azure" Width="50" Height="50" Canvas.Left="0" Canvas.Top="0"/>
+            <Rectangle Name="rectTarget" Fill="Blue" Stroke="Azure" Canvas.Left="0" Canvas.Top="0"/>
             <Border Name="bdClip" Background="Gray">
                 <Border.Clip>
                     <MultiBinding Converter="{StaticResource RectangleHoleConverter}">

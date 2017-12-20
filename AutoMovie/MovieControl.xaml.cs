@@ -26,20 +26,46 @@ namespace AutoMovie
 
             ClipWidth = 200;
             ClipHeight = 112;
+            TargetWidth = 50;
+            TargetHeight = 50;
         }
 
+        //轨道位置
         public double Position { get; set; }
+        //俯仰角（点头、抬头）
         public double Pitch { get; set; }
+        //偏航角（左右摇动）
         public double Yaw { get; set; }
 
+        //剪裁宽度
         public double ClipWidth { set; get; }
+        //剪裁高度
         public double ClipHeight { set; get; }
+        //剪裁x位置
         public double ClipX { set; get; }
+        //剪裁y位置
         public double ClipY { set; get; }
+
+        //目标尺寸宽度
+        public double TargetWidth { set; get; }
+        //目标尺寸高度
+        public double TargetHeight { set; get; }
+
+        public void updateUI()
+        {
+            Action updateAction = new Action(delegate ()
+            {
+                updateViewfinder();
+            });
+            this.Dispatcher.BeginInvoke(updateAction);
+        }
 
         private void updateViewfinder()
         {
-            //裁剪框尺寸
+            rectTarget.Width = TargetWidth;
+            rectTarget.Height = TargetHeight;
+
+            //裁剪框尺寸（与背景尺寸相同）
             bdClip.Width = cavPanel.ActualWidth;
             bdClip.Height = cavPanel.ActualHeight;
 

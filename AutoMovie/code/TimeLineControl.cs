@@ -44,6 +44,7 @@ namespace AutoMovie
                     }
                     catch(Exception e)
                     {
+                        Console.WriteLine(e);
                         continue;
                     }
 
@@ -53,6 +54,7 @@ namespace AutoMovie
                     }
                     catch(Exception e)
                     {
+                        Console.WriteLine(e);
                         continue;
                     }
 
@@ -280,6 +282,7 @@ namespace AutoMovie
                             }
                             catch(Exception e)
                             {
+                                Console.WriteLine(e);
                                 key.Speed = 10000;
                             }
 
@@ -290,6 +293,7 @@ namespace AutoMovie
                             }
                             catch(Exception e)
                             {
+                                Console.WriteLine(e);
                                 key.EndPosition = 0;
                             }
 
