@@ -176,6 +176,11 @@ namespace AutoMovie
             isPlaying = false;
         }
 
+        public void reset()
+        {
+
+        }
+
         //分段运动逻辑
         void logicTick(object sender, EventArgs e)
         {

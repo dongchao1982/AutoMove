@@ -19,9 +19,32 @@ namespace AutoMovie
     /// </summary>
     public partial class MovieEditer : Window
     {
+        TestBindData m_Ctrl = new TestBindData();
+
+        public TestBindData CTRL
+        {
+            get
+            {
+                return m_Ctrl;
+            }
+            set
+            {
+                m_Ctrl = value;
+            }
+        }
+
         public MovieEditer()
         {
             InitializeComponent();
+
+            this.DataContext = this;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            CTRL.Position -= 1;
+            CTRL.Yaw += 1;
+            CTRL.Pitch += 1;
         }
     }
 }

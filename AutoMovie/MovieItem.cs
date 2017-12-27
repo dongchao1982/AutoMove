@@ -8,6 +8,14 @@ namespace AutoMovie
 {
     class MovieItem
     {
+        public enum MoveType
+        {
+            eNull,
+            eFixed,
+            eTranslationFollowFocus,
+            eTranslation,
+        }
+
         //id，唯一标识
         public int ID { get; set; }
         //拍摄位置，在拍摄过程中会有多个机器，用于描述特定的机器位置
@@ -15,7 +23,7 @@ namespace AutoMovie
         //焦距
         public String FocalDistance { get; set; }
         //运动类型
-        public String MoveType { get; set; }
+        public String Type { get; set; }
         //时间
         public double Time { get; set; }
 

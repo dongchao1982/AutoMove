@@ -28,14 +28,140 @@ namespace AutoMovie
             ClipHeight = 112;
             TargetWidth = 50;
             TargetHeight = 50;
+
+            this.SetBinding(this.sldTrack, Slider.ValueProperty, "Position");
+            this.SetBinding(this.sldPitch, Slider.ValueProperty, "Pitch");
+            this.SetBinding(this.sldYaw, Slider.ValueProperty, "Yaw");
+        }
+
+        private void SetBinding(FrameworkElement obj, DependencyProperty p, string path)
+        {
+            Binding b = new Binding(path) { Source = this };
+            obj.SetBinding(p, b);
+        }
+
+        public static readonly DependencyProperty PositionValueProperty =
+            DependencyProperty.Register(
+                "Position", typeof(double), typeof(MovieControl),
+                new FrameworkPropertyMetadata((double)0, new PropertyChangedCallback(OnPositionValueChanged),
+                                              new CoerceValueCallback(PositionCoerceValue)));
+
+        private static object PositionCoerceValue(DependencyObject obj, object value)
+        {
+            double newValue = (double)value;
+            MovieControl control = (MovieControl)obj;
+            newValue = Math.Max(control.sldTrack.Minimum, Math.Min(control.sldTrack.Maximum, newValue));
+            return newValue;
+        }
+
+        private static void OnPositionValueChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        {
+            MovieControl control = (MovieControl)obj;
+            RoutedPropertyChangedEventArgs<double> e = new RoutedPropertyChangedEventArgs<double>(
+                (double)args.OldValue, (double)args.NewValue, PositionValueChangedEvent);
+            control.OnValueChanged(e);
+        }
+
+        public static readonly RoutedEvent PositionValueChangedEvent = EventManager.RegisterRoutedEvent(
+            "PositionValueChanged", RoutingStrategy.Bubble,
+            typeof(RoutedPropertyChangedEventHandler<double>), typeof(MovieControl));
+
+        protected virtual void OnValueChanged(RoutedPropertyChangedEventArgs<double> args)
+        {
+            RaiseEvent(args);
         }
 
         //轨道位置
-        public double Position { get; set; }
+        public double Position
+        {
+            get
+            {
+                return (double)GetValue(PositionValueProperty);
+            }
+            set
+            {
+                SetValue(PositionValueProperty, value);
+            }
+        }
+
+        public static readonly DependencyProperty PitchValueProperty =
+            DependencyProperty.Register(
+                "Pitch", typeof(double), typeof(MovieControl),
+                new FrameworkPropertyMetadata((double)0, new PropertyChangedCallback(OnPitchValueChanged),
+                                              new CoerceValueCallback(PitchCoerceValue)));
+
+        private static object PitchCoerceValue(DependencyObject obj, object value)
+        {
+            double newValue = (double)value;
+            MovieControl control = (MovieControl)obj;
+            newValue = Math.Max(control.sldPitch.Minimum, Math.Min(control.sldPitch.Maximum, newValue));
+            return newValue;
+        }
+
+        private static void OnPitchValueChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        {
+            MovieControl control = (MovieControl)obj;
+            RoutedPropertyChangedEventArgs<double> e = new RoutedPropertyChangedEventArgs<double>(
+                (double)args.OldValue, (double)args.NewValue, PitchValueChangedEvent);
+            control.OnValueChanged(e);
+        }
+
+        public static readonly RoutedEvent PitchValueChangedEvent = EventManager.RegisterRoutedEvent(
+            "PitchValueChanged", RoutingStrategy.Bubble,
+            typeof(RoutedPropertyChangedEventHandler<double>), typeof(MovieControl));
+
+
         //俯仰角（点头、抬头）
-        public double Pitch { get; set; }
+        public double Pitch
+        {
+            get
+            {
+                return (double)GetValue(PitchValueProperty);
+            }
+            set
+            {
+                SetValue(PitchValueProperty, value);
+            }
+        }
+
+        public static readonly DependencyProperty YawValueProperty =
+            DependencyProperty.Register(
+                "Yaw", typeof(double), typeof(MovieControl),
+                new FrameworkPropertyMetadata((double)0, new PropertyChangedCallback(OnYawValueChanged),
+                                              new CoerceValueCallback(YawCoerceValue)));
+
+        private static object YawCoerceValue(DependencyObject obj, object value)
+        {
+            double newValue = (double)value;
+            MovieControl control = (MovieControl)obj;
+            newValue = Math.Max(control.sldYaw.Minimum, Math.Min(control.sldYaw.Maximum, newValue));
+            return newValue;
+        }
+
+        private static void OnYawValueChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        {
+            MovieControl control = (MovieControl)obj;
+            RoutedPropertyChangedEventArgs<double> e = new RoutedPropertyChangedEventArgs<double>(
+                (double)args.OldValue, (double)args.NewValue, YawValueChangedEvent);
+            control.OnValueChanged(e);
+        }
+
+        public static readonly RoutedEvent YawValueChangedEvent = EventManager.RegisterRoutedEvent(
+            "YawValueChanged", RoutingStrategy.Bubble,
+            typeof(RoutedPropertyChangedEventHandler<double>), typeof(MovieControl));
+
         //偏航角（左右摇动）
-        public double Yaw { get; set; }
+        public double Yaw
+        {
+            get
+            {
+                return (double)GetValue(YawValueProperty);
+            }
+            set
+            {
+                SetValue(YawValueProperty, value);
+            }
+        }
 
         //剪裁宽度
         public double ClipWidth { set; get; }

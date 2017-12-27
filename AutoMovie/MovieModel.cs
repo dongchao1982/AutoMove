@@ -57,6 +57,15 @@ namespace AutoMovie
             return null;
         }
 
+        public MovieItem getItemOfIndex(int index)
+        {
+            if(index>=0 && index<m_lstItems.Count)
+            {
+                return m_lstItems[index];
+            }
+            return null;
+        }
+
         //镜头列表
         private List<MovieItem> m_lstItems;
 

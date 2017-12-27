@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="MovieEditer" Height="768" Width="1024">
     <Grid>
+        <Grid.Resources>
+            <local:TestBindData x:Key="TestBindDataResource"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="67*"/>
             <RowDefinition Height="56*"/>
@@ -16,15 +19,18 @@
             <ColumnDefinition Width="271*"/>
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Row="0" Grid.Column="1">
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-                <Button Margin="20,0,20,0">
-                    add begin
-                </Button>
-                <Button Margin="20,0,20,0">
-                    add end
-                </Button>
-            </StackPanel>
-            <local:MovieControl/>
+            <local:MovieControl x:Name="ctrl" DataContext="{Binding Path=CTRL, Mode=TwoWay}">
+                <local:MovieControl.Position>
+                    <Binding Path="Position" Mode="TwoWay"/>
+                </local:MovieControl.Position>
+                <local:MovieControl.Yaw>
+                    <Binding Path="Yaw" Mode="TwoWay"/>
+                </local:MovieControl.Yaw>
+                <local:MovieControl.Pitch>
+                    <Binding Path="Pitch" Mode="TwoWay"/>
+                </local:MovieControl.Pitch>
+            </local:MovieControl>
         </DockPanel>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="214,196,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
     </Grid>
 </Window>

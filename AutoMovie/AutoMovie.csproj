@@ -95,6 +95,7 @@
     <Compile Include="MovieLens.cs" />
     <Compile Include="MovieModel.cs" />
     <Compile Include="RectangleHoleConverter.cs" />
+    <Compile Include="TestBindData.cs" />
     <Compile Include="WPFHelper.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
