@@ -219,7 +219,7 @@ namespace AutoMovie
 
         public void saveFile(String filename)
         {
-            FileStream file = new FileStream(filename, FileMode.OpenOrCreate);
+            FileStream file = new FileStream(filename, FileMode.Create);
             using (StreamWriter sw = new StreamWriter(file))
             {
                 int line = 0;
