@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Text;
@@ -193,13 +194,6 @@ namespace AutoMovie
 
         private void MotorSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Motor motor = (Motor)lstboxMotor.SelectedItem;
-            if (motor != null)
-            {
-                TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
-                lstBoxMotorKey.ItemsSource = null;
-                lstBoxMotorKey.ItemsSource = model.gets();
-            }
         }
 
         private void RefreshPortClick(object sender, RoutedEventArgs e)
@@ -265,13 +259,23 @@ namespace AutoMovie
 
         private void updateUI()
         {
-            Motor m = (Motor)lstboxMotor.SelectedItem;
-            if (m != null)
+            int index = lstvKeyName.SelectedIndex;
+            if (lstvKeyName.SelectedIndex!=-1)
             {
-                TimeLineModel md = m_TimeLineControl.getTimeLineModel(m);
-                lstBoxMotorKey.ItemsSource = null;
-                lstBoxMotorKey.ItemsSource = md.gets();
+                m_TimeLineKeyData.Clear();
+                foreach (Motor motor in m_TimeLineControl.getMotors())
+                {
+                    TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
+                    m_TimeLineKeyData.Add(model.gets()[index]);
+                }
             }
+            else
+            {
+                m_TimeLineKeyData.Clear();
+            }
+
+            lstvKeyData.ItemsSource = null;
+            lstvKeyData.ItemsSource = m_TimeLineKeyData;
         }
 
         private void AddKeyClick(object sender, RoutedEventArgs e)
@@ -279,6 +283,7 @@ namespace AutoMovie
             foreach(Motor motor in m_TimeLineControl.getMotors())
             {
                 TimeLineKey key = new TimeLineKey();
+                key.Name = motor.Name;
                 key.Speed = motor.Speed;
                 key.StartPositon = 0;
                 key.EndPosition = motor.Position;
@@ -287,19 +292,31 @@ namespace AutoMovie
                 model.add(key);
             }
 
+            //更新帧列表
+            KeyName.Add("帧" + m_KeyCount++);
+            int index = lstvKeyName.SelectedIndex;
+            lstvKeyName.ItemsSource = null;
+            lstvKeyName.ItemsSource = KeyName;
+            lstvKeyName.SelectedIndex = index;
+
             updateUI();
         }
 
         private void DelKeyClick(object sender, RoutedEventArgs e)
         {
-            if(lstBoxMotorKey.SelectedIndex!=-1)
+            if(lstvKeyName.SelectedIndex!=-1)
             {
-                int idx = lstBoxMotorKey.SelectedIndex;
+                int idx = lstvKeyName.SelectedIndex;
                 foreach (Motor motor in m_TimeLineControl.getMotors())
                 {
                     TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
                     model.del(idx);
                 }
+
+                //更新帧列表
+                KeyName.RemoveAt(idx);
+                lstvKeyName.ItemsSource = null;
+                lstvKeyName.ItemsSource = KeyName;
 
                 updateUI();
             }
@@ -307,9 +324,9 @@ namespace AutoMovie
 
         private void UpdateKeyClick(object sender, RoutedEventArgs e)
         {
-            if(lstBoxMotorKey.SelectedIndex!=-1)
+            if(lstvKeyName.SelectedIndex!=-1)
             {
-                int idx = lstBoxMotorKey.SelectedIndex;
+                int idx = lstvKeyName.SelectedIndex;
                 foreach (Motor motor in m_TimeLineControl.getMotors())
                 {
                     TimeLineKey key = new TimeLineKey();
@@ -332,6 +349,10 @@ namespace AutoMovie
                 TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
                 model.clear();
             }
+
+            lstvKeyName.ItemsSource = null;
+            KeyName.Clear();
+            m_KeyCount = 1;
 
             updateUI();
         }
@@ -383,6 +404,14 @@ namespace AutoMovie
         private SerialPortControl m_SerialPortControl = null;
         private TimeLineControl m_TimeLineControl = null;
         private MotorDlg m_MotorDlg = null;
+        private List<String> m_KeyName = new List<String>();
+        private List<TimeLineKey> m_TimeLineKeyData = new List<TimeLineKey>();
+        private int m_KeyCount = 1;
+
+        public List<String> KeyName
+        {
+            get { return m_KeyName; }
+        }
 
         private void ButtonClipClick(object sender, RoutedEventArgs e)
         {
@@ -440,6 +469,26 @@ namespace AutoMovie
         {
             MovieEditer me = new MovieEditer();
             me.ShowDialog();
+        }
+
+        private void lstvKeyName_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            updateUI();
+        }
+
+        private void lstvKeyName_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if(lstvKeyName.SelectedIndex!=-1)
+            {
+                m_TimeLineKeyData.Clear();
+                foreach (Motor motor in m_TimeLineControl.getMotors())
+                {
+                    TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
+                    TimeLineKey key = model.get(lstvKeyName.SelectedIndex);
+                    motor.setPulseRate(key.Speed);
+                    motor.setPosition(key.EndPosition);
+                }
+            }
         }
     }
 }

@@ -218,27 +218,62 @@
                 </ListBox>
             </StackPanel>
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top" Margin="3">关键帧</TextBlock>
-                <ListBox MinWidth="150" Name="lstBoxMotorKey">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="80"></ColumnDefinition>
-                                    <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                                    <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                                    <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                                    <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Path=StartPositon,Mode=OneWay}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Path=EndPosition,Mode=OneWay}"/>
-                                <TextBlock Grid.Column="2" Text="{Binding Path=Distance,Mode=OneWay}"/>
-                                <TextBlock Grid.Column="3" Text="{Binding Path=Speed,Mode=OneWay}"/>
-                                <TextBlock Grid.Column="4" Text="{Binding Path=Time,Mode=OneWay}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <ListView Width="100" Name="lstvKeyName" SelectionChanged="lstvKeyName_SelectionChanged" MouseDoubleClick="lstvKeyName_MouseDoubleClick">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="80" Header="关键帧">
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <ListView MinWidth="150" Name="lstvKeyData">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="80" Header="名字">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Name}"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="80" Header="起始位置">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=StartPositon}"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="80" Header="结束位置">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=EndPosition}"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="80" Header="距离">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Distance}"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="80" Header="速度">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Speed}"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="80" Header="时间">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Time}"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </DockPanel>
         </DockPanel>
     </Grid>

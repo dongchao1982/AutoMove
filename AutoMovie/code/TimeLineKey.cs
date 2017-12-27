@@ -8,6 +8,7 @@ namespace AutoMovie
 {
     class TimeLineKey
     {
+        public String Name { get; set; }
         public int Speed { get; set; }
         public int StartPositon { get; set; }
         public int EndPosition { get; set; }
