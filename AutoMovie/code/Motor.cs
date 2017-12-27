@@ -35,7 +35,7 @@ namespace AutoMovie
 
         /*属性*/
         //类型名字
-        public string Alias { get; set; }
+        /*public string Alias { get; set; }*/
         //名称
         public string Name { get; set; }
         //索引

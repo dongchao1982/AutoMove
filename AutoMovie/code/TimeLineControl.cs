@@ -37,7 +37,6 @@ namespace AutoMovie
                 motor.Name = INI.ReadIni(strSection, "name");
                 if(motor.Name.Length>0)
                 {
-                    motor.Alias = strSection;
                     try
                     {
                         motor.Index = Convert.ToInt32(INI.ReadIni(strSection, "index"));
@@ -93,18 +92,6 @@ namespace AutoMovie
             foreach (Motor m in m_dicLine.Keys)
             {
                 if (m.Index == idx)
-                {
-                    return m;
-                }
-            }
-            return null;
-        }
-
-        public Motor findMotorOfAlias(String alias)
-        {
-            foreach (Motor m in m_dicLine.Keys)
-            {
-                if (m.Alias == alias)
                 {
                     return m;
                 }
@@ -264,7 +251,7 @@ namespace AutoMovie
 
             StreamReader sr = new StreamReader(filename, Encoding.UTF8);
             String line;
-            String alias;
+            String name;
             while ((line = sr.ReadLine()) != null)
             {
                 if (line.Length > 0)
@@ -275,8 +262,8 @@ namespace AutoMovie
                     }
                     else
                     {
-                        alias = line;
-                        Motor motor = findMotorOfAlias(alias);
+                        name = line;
+                        Motor motor = findMotor(name);
                         if(motor!=null)
                         {
                             TimeLineKey key = new TimeLineKey();
