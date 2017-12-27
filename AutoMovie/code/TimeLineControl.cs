@@ -267,6 +267,7 @@ namespace AutoMovie
                         if(motor!=null)
                         {
                             TimeLineKey key = new TimeLineKey();
+                            key.Name = motor.Name;
                             try
                             {
                                 line = sr.ReadLine();

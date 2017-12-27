@@ -397,6 +397,15 @@ namespace AutoMovie
             {
                 m_TimeLineControl.readFile(dlg.FileName);
 
+                m_KeyCount = 1;
+                KeyName.Clear();
+                for(int i=0;i<m_TimeLineControl.getModels()[0].count();++i)
+                {
+                    KeyName.Add("帧" + m_KeyCount++);
+                }
+                lstvKeyName.ItemsSource = null;
+                lstvKeyName.ItemsSource = KeyName;
+
                 updateUI();
             }
         }

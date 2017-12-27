@@ -56,7 +56,7 @@ namespace AutoMovie
         {            
         }
 
-        private MovieModel m_model;
-        private DispatcherTimer m_Timer;
+        private MovieModel m_model = null;
+        private DispatcherTimer m_Timer = null;
     }
 }
