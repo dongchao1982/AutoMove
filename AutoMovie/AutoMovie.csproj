@@ -84,16 +84,12 @@
     <Compile Include="MotorDlg.xaml.cs">
       <DependentUpon>MotorDlg.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MoviePlayControl.cs" />
     <Compile Include="MovieControl.xaml.cs">
       <DependentUpon>MovieControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MovieEditer.xaml.cs">
       <DependentUpon>MovieEditer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MovieItem.cs" />
-    <Compile Include="MovieLens.cs" />
-    <Compile Include="MovieModel.cs" />
     <Compile Include="RectangleHoleConverter.cs" />
     <Compile Include="TestBindData.cs" />
     <Compile Include="WPFHelper.cs" />

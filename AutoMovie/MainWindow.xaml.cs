@@ -235,6 +235,7 @@ namespace AutoMovie
 
         private void StopAllMotorClick(object sender, RoutedEventArgs e)
         {
+            m_TimeLineControl.stop();
             m_SerialPortControl.stopAll();
             output("stop all motor.\r\n");
         }
