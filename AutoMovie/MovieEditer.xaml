@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoMovie"
         mc:Ignorable="d"
-        Title="MovieEditer" Height="768" Width="1024">
+        Title="MovieEditer" Height="768" Width="1024" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="67*"/>
@@ -26,5 +26,8 @@
             </StackPanel>
             <local:MovieControl/>
         </DockPanel>
+        <local:FragmentControl Margin="0,0,157,316" x:Name="FCItem">
+            
+        </local:FragmentControl>
     </Grid>
 </Window>

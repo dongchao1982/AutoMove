@@ -1,4 +1,9 @@
-﻿<Application x:Class="AutoMovie.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:AutoMovie" StartupUri="MainWindow.xaml" Exit="Application_Exit">
+﻿<Application x:Class="AutoMovie.App" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:local="clr-namespace:AutoMovie" 
+             StartupUri="MovieEditer.xaml" 
+             Exit="Application_Exit">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

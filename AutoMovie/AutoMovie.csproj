@@ -66,6 +66,9 @@
     <Compile Include="code\TimeLineControl.cs" />
     <Compile Include="code\Motor.cs" />
     <Compile Include="EnumerableExtension.cs" />
+    <Compile Include="FragmentControl.xaml.cs">
+      <DependentUpon>FragmentControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MotorDlg.xaml.cs">
       <DependentUpon>MotorDlg.xaml</DependentUpon>
     </Compile>
@@ -76,11 +79,16 @@
     <Compile Include="MovieEditer.xaml.cs">
       <DependentUpon>MovieEditer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MovieItem.cs" />
-    <Compile Include="MovieLens.cs" />
-    <Compile Include="MovieModel.cs" />
+    <Compile Include="Model\MovieItem.cs" />
+    <Compile Include="Model\MovieLens.cs" />
+    <Compile Include="Model\MovieModel.cs" />
     <Compile Include="RectangleHoleConverter.cs" />
+    <Compile Include="ResizeAdorner.cs" />
     <Compile Include="WPFHelper.cs" />
+    <Page Include="FragmentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -104,6 +112,10 @@
     <Page Include="MovieEditer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +169,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\unmoving.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\image.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

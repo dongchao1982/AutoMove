@@ -19,9 +19,17 @@ namespace AutoMovie
     /// </summary>
     public partial class MovieEditer : Window
     {
+        AdornerLayer myAdornerLayer;
+
         public MovieEditer()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            myAdornerLayer = AdornerLayer.GetAdornerLayer(FCItem);
+            myAdornerLayer.Add(new ResizeAdorner(FCItem));
         }
     }
 }
