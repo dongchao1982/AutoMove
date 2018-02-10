@@ -2,8 +2,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Telerik.Windows.Themes.Office2013;component/Themes/System.Windows.xaml" />
-                <ResourceDictionary Source="/Telerik.Windows.Themes.Office2013;component/Themes/Telerik.Windows.Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
