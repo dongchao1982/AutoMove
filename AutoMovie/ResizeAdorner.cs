@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -16,29 +12,15 @@ namespace AutoMovie
 {
     public class ResizeAdorner : Adorner
     {
-        const double THUMB_SIZE = 10;
-        const double MINIMAL_SIZE = 20;
-        const double MOVE_OFFSET = 20;
+        const double THUMB_SIZE     = 10;
+        const double MINIMAL_SIZE   = 10;
+        const double MOVE_OFFSET    = 20;
 
-        //9 thumbs
-        /*                        moveAndRotateThumb
-         *                              *
-         *                              *
-         * topLeftThumb*************topMiddleThumb**************topRightThumb        
-         *      *                                                    *
-         *      *                                                    *
-         *      *                                                    *
-         * middleLeftThumb                                     middleRightThumb
-         *      *                                                    *
-         *      *                                                    *
-         *      *                                                    * 
-         * bottomLeftThumb*********bottomMiddleThumb**************bottomRightThumb
-         * 
-         * */
-        Thumb moveAndRotateThumb, topLeftThumb, middleLeftThumb, bottomLeftThumb, topMiddleThumb, topRightThumb, middleRightThumb, bottomRightThumb, bottomMiddleThumb;
+        Thumb moveAndRotateThumb;
+        Thumb middleLeftThumb;
+        Thumb middleRightThumb;
 
         Rectangle thumbRectangle;
-
 
         VisualCollection visualCollection;
 
@@ -46,41 +28,30 @@ namespace AutoMovie
         {
             visualCollection = new VisualCollection(this);
 
-            visualCollection.Add(thumbRectangle = GeteResizeRectangle());
-
-            visualCollection.Add(topLeftThumb = GetResizeThumb(Cursors.SizeNWSE, HorizontalAlignment.Left, VerticalAlignment.Top));
-            visualCollection.Add(middleLeftThumb = GetResizeThumb(Cursors.SizeWE, HorizontalAlignment.Left, VerticalAlignment.Center));
-            visualCollection.Add(bottomLeftThumb = GetResizeThumb(Cursors.SizeNESW, HorizontalAlignment.Left, VerticalAlignment.Bottom));
-
-            visualCollection.Add(topRightThumb = GetResizeThumb(Cursors.SizeNESW, HorizontalAlignment.Right, VerticalAlignment.Top));
-            visualCollection.Add(middleRightThumb = GetResizeThumb(Cursors.SizeWE, HorizontalAlignment.Right, VerticalAlignment.Center));
-            visualCollection.Add(bottomRightThumb = GetResizeThumb(Cursors.SizeNWSE, HorizontalAlignment.Right, VerticalAlignment.Bottom));
-
-            visualCollection.Add(topMiddleThumb = GetResizeThumb(Cursors.SizeNS, HorizontalAlignment.Center, VerticalAlignment.Top));
-            visualCollection.Add(bottomMiddleThumb = GetResizeThumb(Cursors.SizeNS, HorizontalAlignment.Center, VerticalAlignment.Bottom));
-
-            visualCollection.Add(moveAndRotateThumb = GetMoveAndRotateThumb());
-
-
-        }
-        private Rectangle GeteResizeRectangle()
-        {
-            var rectangle = new Rectangle()
+            //框住控件的矩形区域
+            thumbRectangle = new Rectangle()
             {
                 Width = AdornedElement.RenderSize.Width,
                 Height = AdornedElement.RenderSize.Height,
                 Fill = Brushes.Transparent,
-                Stroke = Brushes.Green,
+                Stroke = Brushes.Red,
                 StrokeThickness = (double)1
             };
-            return rectangle;
+            visualCollection.Add(thumbRectangle);
+
+            //创建控制句柄
+            middleLeftThumb = GetResizeThumb(Cursors.SizeWE, HorizontalAlignment.Left, VerticalAlignment.Center);
+            visualCollection.Add(middleLeftThumb);
+            middleRightThumb = GetResizeThumb(Cursors.SizeWE, HorizontalAlignment.Right, VerticalAlignment.Center);
+            visualCollection.Add(middleRightThumb);
+
+            visualCollection.Add(moveAndRotateThumb = GetMoveAndRotateThumb());
         }
 
         private Thumb GetResizeThumb(Cursor cur, HorizontalAlignment horizontal, VerticalAlignment vertical)
         {
             var thumb = new Thumb()
             {
-                //Background = Brushes.Red,
                 Width = THUMB_SIZE,
                 Height = THUMB_SIZE,
                 HorizontalAlignment = horizontal,
@@ -94,38 +65,10 @@ namespace AutoMovie
             thumb.DragDelta += (s, e) =>
             {
                 var element = AdornedElement as FrameworkElement;
-
                 if (element == null)
                     return;
-
                 this.ElementResize(element);
 
-                switch (thumb.VerticalAlignment)
-                {
-                    case VerticalAlignment.Bottom:
-                        if (element.Height + e.VerticalChange > MINIMAL_SIZE)
-                        {
-                            element.Height += e.VerticalChange;
-                            thumbRectangle.Height += e.VerticalChange;
-                        }
-                        break;
-
-                    //case VerticalAlignment.Center:
-                    //    if ()
-                    //    {
-
-                    //    }
-                    //    break;
-                    case VerticalAlignment.Top:
-                        if (element.Height - e.VerticalChange > MINIMAL_SIZE)
-                        {
-                            element.Height -= e.VerticalChange;
-                            thumbRectangle.Height -= e.VerticalChange;
-
-                            Canvas.SetTop(element, Canvas.GetTop(element) + e.VerticalChange);
-                        }
-                        break;
-                }
                 switch (thumb.HorizontalAlignment)
                 {
                     case HorizontalAlignment.Left:
@@ -136,12 +79,6 @@ namespace AutoMovie
                             Canvas.SetLeft(element, Canvas.GetLeft(element) + e.HorizontalChange);
                         }
                         break;
-                    //case HorizontalAlignment.Center:
-                    //    if (element.Width + e.HorizontalChange > MINIMAL_SIZE)
-                    //    {
-                    //        element.Width += e.HorizontalChange;
-                    //    }
-                    //    break;
                     case HorizontalAlignment.Right:
                         if (element.Width + e.HorizontalChange > MINIMAL_SIZE)
                         {
@@ -150,7 +87,6 @@ namespace AutoMovie
                         }
                         break;
                 }
-
                 e.Handled = true;
             };
             return thumb;
@@ -214,14 +150,6 @@ namespace AutoMovie
             double offset = (THUMB_SIZE / 2);
             Size sz = new Size(THUMB_SIZE, THUMB_SIZE);
 
-            topLeftThumb.Arrange(new Rect(new Point(-offset, -offset), sz));
-            topMiddleThumb.Arrange(new Rect(new Point(AdornedElement.RenderSize.Width / 2 - THUMB_SIZE / 2, -offset), sz));
-            topRightThumb.Arrange(new Rect(new Point(AdornedElement.RenderSize.Width - offset, -offset), sz));
-
-            bottomLeftThumb.Arrange(new Rect(new Point(-offset, AdornedElement.RenderSize.Height - offset), sz));
-            bottomMiddleThumb.Arrange(new Rect(new Point(AdornedElement.RenderSize.Width / 2 - THUMB_SIZE / 2, AdornedElement.RenderSize.Height - offset), sz));
-            bottomRightThumb.Arrange(new Rect(new Point(AdornedElement.RenderSize.Width - offset, AdornedElement.RenderSize.Height - offset), sz));
-
             middleLeftThumb.Arrange(new Rect(new Point(-offset, AdornedElement.RenderSize.Height / 2 - THUMB_SIZE / 2), sz));
             middleRightThumb.Arrange(new Rect(new Point(AdornedElement.RenderSize.Width - offset, AdornedElement.RenderSize.Height / 2 - THUMB_SIZE / 2), sz));
 
@@ -239,10 +167,7 @@ namespace AutoMovie
 
         protected override int VisualChildrenCount
         {
-            get
-            {
-                return visualCollection.Count;
-            }
+            get { return visualCollection.Count; }
         }
     }
 }

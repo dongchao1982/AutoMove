@@ -26,8 +26,10 @@
             </StackPanel>
             <local:MovieControl/>
         </DockPanel>
-        <local:FragmentControl Margin="0,0,157,316" x:Name="FCItem">
-            
-        </local:FragmentControl>
+        <Canvas>
+            <local:FragmentControl x:Name="FCItem" Canvas.Left="65" Canvas.Top="42">
+
+            </local:FragmentControl>
+        </Canvas>
     </Grid>
 </Window>
