@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="code\CameraLens.cs" />
     <Compile Include="code\Cmd.cs" />
     <Compile Include="code\INI.cs" />
     <Compile Include="code\SerialPortControl.cs" />
