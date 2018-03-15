@@ -187,22 +187,29 @@ namespace AutoMovie
                 }
 
                 //电机全部停止并运动时间超过预计时间的一半（防止还没移动就切换了）
-                if (!bMotorMoving && dt >= (m_KeyMoveTime / 2))
+                if (!bMotorMoving && dt >= m_KeyMoveTime)
                 {
                     foreach (Motor motor in m_dicLine.Keys)
                     {
                         TimeLineModel model = m_dicLine[motor];
                         if (Index < model.count())
                         {
+                            TimeLineKey preData = Index > 0 ? model.get(Index - 1) : null;
                             TimeLineKey data = model.get(Index);
                             if (data != null)
                             {
-                                if (data.Time > m_KeyMoveTime)
+                                int time = 0;
+                                if (preData != null)
                                 {
-                                    m_KeyMoveTime = data.Time;
+                                    int distance = (data.Position - preData.Position);
+                                    time = (int)(((double)Math.Abs(distance) / (double)data.Speed * 1000.0));
+                                }
+                                if (time > m_KeyMoveTime)
+                                {
+                                    m_KeyMoveTime = time;
                                 }
                                 motor.setPulseRate(data.Speed);
-                                motor.setPosition(data.EndPosition);
+                                motor.setPosition(data.Position);
                             }
                         }
                         else
@@ -232,7 +239,7 @@ namespace AutoMovie
                     {
                         sw.WriteLine(motor.Name);
                         sw.WriteLine(key.Speed);
-                        sw.WriteLine(key.EndPosition);
+                        sw.WriteLine(key.Position);
                     }
                 }
                 sw.Flush();
@@ -282,12 +289,12 @@ namespace AutoMovie
                             try
                             {
                                 line = sr.ReadLine();
-                                key.EndPosition = Convert.ToInt32(line);
+                                key.Position = Convert.ToInt32(line);
                             }
                             catch(Exception e)
                             {
                                 Console.WriteLine(e);
-                                key.EndPosition = 0;
+                                key.Position = 0;
                             }
 
                             TimeLineModel model = getTimeLineModel(motor);

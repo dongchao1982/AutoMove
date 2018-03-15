@@ -287,8 +287,7 @@ namespace AutoMovie
                 TimeLineKey key = new TimeLineKey();
                 key.Name = motor.Name;
                 key.Speed = motor.Speed;
-                key.StartPositon = 0;
-                key.EndPosition = motor.Position;
+                key.Position = motor.Position;
 
                 TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
                 model.add(key);
@@ -330,8 +329,7 @@ namespace AutoMovie
                 {
                     TimeLineKey key = new TimeLineKey();
                     key.Speed = motor.Speed;
-                    key.StartPositon = 0;
-                    key.EndPosition = motor.Position;
+                    key.Position = motor.Position;
 
                     TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
                     model.update(idx,key);
@@ -369,7 +367,7 @@ namespace AutoMovie
                 {
                     TimeLineKey key = model.get(0);
                     motor.setPulseRate(key.Speed);
-                    motor.setPosition(key.EndPosition);
+                    motor.setPosition(key.Position);
                 }               
             }
         }
@@ -487,7 +485,7 @@ namespace AutoMovie
                     TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
                     TimeLineKey key = model.get(lstvKeyName.SelectedIndex);
                     motor.setPulseRate(key.Speed);
-                    motor.setPosition(key.EndPosition);
+                    motor.setPosition(key.Position);
                 }
             }
         }

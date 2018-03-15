@@ -20,10 +20,6 @@ namespace AutoMovie
 
         public void add(TimeLineKey key)
         {
-            if (m_lstKeys.Count > 0)
-            {
-                key.StartPositon = m_lstKeys[m_lstKeys.Count - 1].EndPosition;
-            }
             m_lstKeys.Add(key);
         }
 
