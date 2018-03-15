@@ -70,6 +70,7 @@
     <Compile Include="FragmentControl.xaml.cs">
       <DependentUpon>FragmentControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainModel.cs" />
     <Compile Include="MotorDlg.xaml.cs">
       <DependentUpon>MotorDlg.xaml</DependentUpon>
     </Compile>

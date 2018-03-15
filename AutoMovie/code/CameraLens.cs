@@ -14,6 +14,7 @@ namespace AutoMovie
             return 2 * Math.Atan(h / (2 * f)) * 180 / Math.PI;
         }
 
+        //horizontal，宽度
         public static double HFOV(double wd,double fov)
         {
             return 2 * wd * Math.Tan(fov / 2);
