@@ -187,7 +187,7 @@ namespace AutoMovie
                 }
 
                 //电机全部停止并运动时间超过预计时间的一半（防止还没移动就切换了）
-                if (!bMotorMoving && dt >= m_KeyMoveTime)
+                if (!bMotorMoving && dt >= (m_KeyMoveTime/2))
                 {
                     foreach (Motor motor in m_dicLine.Keys)
                     {
