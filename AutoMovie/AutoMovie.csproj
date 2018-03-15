@@ -81,6 +81,7 @@
     <Compile Include="code\TimeLineControl.cs" />
     <Compile Include="code\Motor.cs" />
     <Compile Include="EnumerableExtension.cs" />
+    <Compile Include="MainModel.cs" />
     <Compile Include="MotorDlg.xaml.cs">
       <DependentUpon>MotorDlg.xaml</DependentUpon>
     </Compile>

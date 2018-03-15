@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutoMovie
 {
-    class TimeLineKey
+    public class TimeLineKey
     {
         public String Name { get; set; }
         public int Speed { get; set; }

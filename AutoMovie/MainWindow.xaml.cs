@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace AutoMovie
 {
@@ -32,6 +33,13 @@ namespace AutoMovie
 
             m_btnInitial.IsEnabled = !m_SerialPortControl.isOK();
             m_btnDispose.IsEnabled = m_SerialPortControl.isOK();
+
+            this.DataContext = new MainModel();
+        }
+
+        public MainModel Model()
+        {
+            return (MainModel)this.DataContext;
         }
 
         private void refreshPort()
@@ -261,22 +269,15 @@ namespace AutoMovie
         private void updateUI()
         {
             int index = lstvKeyName.SelectedIndex;
-            if (lstvKeyName.SelectedIndex!=-1)
+            Model().lstKeyData.Clear();
+            if (index != -1)
             {
-                m_TimeLineKeyData.Clear();
                 foreach (Motor motor in m_TimeLineControl.getMotors())
                 {
                     TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
-                    m_TimeLineKeyData.Add(model.gets()[index]);
+                    Model().lstKeyData.Add(model.gets()[index]);
                 }
             }
-            else
-            {
-                m_TimeLineKeyData.Clear();
-            }
-
-            lstvKeyData.ItemsSource = null;
-            lstvKeyData.ItemsSource = m_TimeLineKeyData;
         }
 
         private void AddKeyClick(object sender, RoutedEventArgs e)
@@ -293,33 +294,30 @@ namespace AutoMovie
                 model.add(key);
             }
 
-            //更新帧列表
-            KeyName.Add("帧" + m_KeyCount++);
-            int index = lstvKeyName.SelectedIndex;
-            lstvKeyName.ItemsSource = null;
-            lstvKeyName.ItemsSource = KeyName;
-            lstvKeyName.SelectedIndex = index;
+            string keyName = "帧" + m_KeyCount++;
+            Model().lstKeyName.Add(keyName);
 
             updateUI();
         }
 
         private void DelKeyClick(object sender, RoutedEventArgs e)
         {
-            if(lstvKeyName.SelectedIndex!=-1)
+            int idx = lstvKeyName.SelectedIndex;
+            if (idx != -1)
             {
-                int idx = lstvKeyName.SelectedIndex;
-                foreach (Motor motor in m_TimeLineControl.getMotors())
+                MessageBoxResult confirmToDel = MessageBox.Show("确认要删除关键帧？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (confirmToDel == MessageBoxResult.Yes)
                 {
-                    TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
-                    model.del(idx);
-                }
+                    foreach (Motor motor in m_TimeLineControl.getMotors())
+                    {
+                        TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
+                        model.del(idx);
+                    }
 
-                //更新帧列表
-                KeyName.RemoveAt(idx);
-                lstvKeyName.ItemsSource = null;
-                lstvKeyName.ItemsSource = KeyName;
+                    Model().lstKeyName.RemoveAt(idx);
 
-                updateUI();
+                    updateUI();
+                }   
             }
         }
 
@@ -345,17 +343,20 @@ namespace AutoMovie
 
         private void ClearKeyClick(object sender, RoutedEventArgs e)
         {
-            foreach (Motor motor in m_TimeLineControl.getMotors())
+            MessageBoxResult confirmToDel = MessageBox.Show("确认要清空关键帧？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (confirmToDel == MessageBoxResult.Yes)
             {
-                TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
-                model.clear();
+                foreach (Motor motor in m_TimeLineControl.getMotors())
+                {
+                    TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
+                    model.clear();
+                }
+
+                Model().lstKeyName.Clear();
+                m_KeyCount = 1;
+
+                updateUI();
             }
-
-            lstvKeyName.ItemsSource = null;
-            KeyName.Clear();
-            m_KeyCount = 1;
-
-            updateUI();
         }
 
         private void GoHomeClick(object sender, RoutedEventArgs e)
@@ -399,13 +400,11 @@ namespace AutoMovie
                 m_TimeLineControl.readFile(dlg.FileName);
 
                 m_KeyCount = 1;
-                KeyName.Clear();
+                Model().lstKeyName.Clear();
                 for(int i=0;i<m_TimeLineControl.getModels()[0].count();++i)
                 {
-                    KeyName.Add("帧" + m_KeyCount++);
+                    Model().lstKeyName.Add("帧" + m_KeyCount++);
                 }
-                lstvKeyName.ItemsSource = null;
-                lstvKeyName.ItemsSource = KeyName;
 
                 updateUI();
             }
@@ -414,14 +413,7 @@ namespace AutoMovie
         private SerialPortControl m_SerialPortControl = null;
         private TimeLineControl m_TimeLineControl = null;
         private MotorDlg m_MotorDlg = null;
-        private List<String> m_KeyName = new List<String>();
-        private List<TimeLineKey> m_TimeLineKeyData = new List<TimeLineKey>();
         private int m_KeyCount = 1;
-
-        public List<String> KeyName
-        {
-            get { return m_KeyName; }
-        }
 
         private void ButtonClipClick(object sender, RoutedEventArgs e)
         {
@@ -490,13 +482,130 @@ namespace AutoMovie
         {
             if(lstvKeyName.SelectedIndex!=-1)
             {
-                m_TimeLineKeyData.Clear();
                 foreach (Motor motor in m_TimeLineControl.getMotors())
                 {
                     TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
                     TimeLineKey key = model.get(lstvKeyName.SelectedIndex);
                     motor.setPulseRate(key.Speed);
                     motor.setPosition(key.EndPosition);
+                }
+            }
+        }
+
+        private void SpeedTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox text = (TextBox)sender;
+            StackPanel itemPanel = WPFHelper.GetParentObject<StackPanel>(text, "itemPanel");
+            Motor motor = m_TimeLineControl.findMotor((string)itemPanel.Tag);
+            if (text.Text.Length > 0)
+            {
+                int Speed = Convert.ToInt32(text.Text);
+                motor.setPulseRate(Speed);
+            }
+            else
+            {
+                motor.setPulseRate(0);
+            }
+        }
+
+        private void SpeedTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            TextBox txt = sender as TextBox;
+
+            //屏蔽非法按键
+            if ((e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9) || e.Key == Key.Decimal || e.Key.ToString() == "Tab")
+            {
+                if (txt.Text.Contains(".") && e.Key == Key.Decimal)
+                {
+                    e.Handled = true;
+                    return;
+                }
+                e.Handled = false;
+            }
+            else if (((e.Key >= Key.D0 && e.Key <= Key.D9) || e.Key == Key.OemPeriod) && e.KeyboardDevice.Modifiers != ModifierKeys.Shift)
+            {
+                if (txt.Text.Contains(".") && e.Key == Key.OemPeriod)
+                {
+                    e.Handled = true;
+                    return;
+                }
+                e.Handled = false;
+            }
+            else
+            {
+                e.Handled = true;
+                if (e.Key.ToString() != "RightCtrl")
+                {
+                }
+            }
+        }
+
+        delegate Point GetPositionDelegate(IInputElement element);
+
+        ListViewItem GetListViewItem(int index)
+        {
+            if (lstvKeyName.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
+                return null;
+            return lstvKeyName.ItemContainerGenerator.ContainerFromIndex(index) as ListViewItem;
+        }
+
+        private bool IsMouseOverTarget(Visual target, GetPositionDelegate getPosition)
+        {
+            Rect bounds = VisualTreeHelper.GetDescendantBounds(target);
+            Point mousePos = getPosition((IInputElement)target);
+            return bounds.Contains(mousePos);
+        }
+
+        private int GetCurrentIndex(GetPositionDelegate getPosition)
+        {
+            int index = -1;
+            for (int i = 0; i < lstvKeyName.Items.Count; ++i)
+            {
+                ListViewItem item = GetListViewItem(i);
+                if (item != null && IsMouseOverTarget(item, getPosition))
+                {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+
+        private void lstvKeyName_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(System.Collections.IList)))
+            {
+                System.Collections.IList peopleList = e.Data.GetData(typeof(System.Collections.IList)) as System.Collections.IList;
+                //index为放置时鼠标下元素项的索引
+                int index = GetCurrentIndex(new GetPositionDelegate(e.GetPosition));
+                if (index > -1 && peopleList.Count > 0)
+                {
+                    string item = peopleList[0] as string;
+                    //拖动元素集合的第一个元素索引
+                    int OldFirstIndex = Model().lstKeyName.IndexOf(item);
+                    //交换数据
+                    Model().lstKeyName.Move(OldFirstIndex, index);
+                    foreach (Motor motor in m_TimeLineControl.getMotors())
+                    {
+                        TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
+                        TimeLineKey oldKey = model.gets()[OldFirstIndex];
+                        model.gets()[OldFirstIndex] = model.gets()[index];
+                        model.gets()[index] = oldKey;
+                    }
+                }
+            }
+        }
+
+        private void lstvKeyName_MouseMove(object sender, MouseEventArgs e)
+        {
+            ListView listview = sender as ListView;
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                System.Collections.IList list = listview.SelectedItems as System.Collections.IList;
+                DataObject data = new DataObject(typeof(System.Collections.IList), list);
+                if (list.Count > 0)
+                {
+                    DragDrop.DoDragDrop(listview, data, DragDropEffects.Move);
                 }
             }
         }

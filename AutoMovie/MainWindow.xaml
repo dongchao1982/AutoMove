@@ -6,11 +6,21 @@
         xmlns:local="clr-namespace:AutoMovie"
         mc:Ignorable="d"
         Title="自动化拍摄" Height="800" Width="1200">
+    <Window.DataContext>
+        <local:MainModel/>
+    </Window.DataContext>
     <Grid>
         <DockPanel>
             <ToolBar DockPanel.Dock="Top">
+                <Menu>
+                    <MenuItem Header="文件" Width="100">
+                        <MenuItem Header="新建" Name="menuFileNew" Click="ClearKeyClick"/>
+                        <MenuItem Header="打开" Name="menuFileOpen" Click="ReadFileClick"/>
+                        <MenuItem Header="保存" Name="menuFileSave" Click="SaveFileClick"/>
+                    </MenuItem>
+                </Menu>
                 <TextBlock Margin="3" VerticalAlignment="Center">
-                    串口列表:
+                    设备列表:
                 </TextBlock>
                 <ComboBox Name="comboBoxPort" Width="160" Margin="3"/>
                 <Button Width="25" Height="25" Margin="3" Click="RefreshPortClick">
@@ -39,9 +49,6 @@
                 <Button Click="ButtonClipClick">
                     <TextBlock HorizontalAlignment="Center">合成视频</TextBlock>
                 </Button>
-                <Button Click="Button_Click">
-                    TEST
-                </Button>
             </ToolBar>
             <TabControl DockPanel.Dock="Bottom"  Margin="3" Height="200">
                 <TabItem Header="输出">
@@ -53,16 +60,11 @@
                     </DockPanel>
                 </TabItem>
             </TabControl>
-            <StackPanel DockPanel.Dock="Left" Margin="3" Width="490" HorizontalAlignment="Left" >
+            <StackPanel DockPanel.Dock="Left" Margin="3" Width="555" HorizontalAlignment="Left" >
                 <ToolBar>
                     <Button Width="Auto" Height="25" Margin="3" Click="AddKeyClick">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock HorizontalAlignment="Center">插入帧</TextBlock>
-                        </StackPanel>
-                    </Button>
-                    <Button Width="Auto" Height="25" Margin="3" Click="DelKeyClick">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Center">删除帧</TextBlock>
                         </StackPanel>
                     </Button>
                     <Button Width="Auto" Height="25" Margin="3" Click="UpdateKeyClick">
@@ -70,33 +72,21 @@
                             <TextBlock HorizontalAlignment="Center">更新帧</TextBlock>
                         </StackPanel>
                     </Button>
-                    <Button Width="Auto" Height="25" Margin="3" Click="ClearKeyClick">
+                    <Button Width="Auto" Height="25" Margin="3" Click="DelKeyClick">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Center">清空帧</TextBlock>
+                            <TextBlock HorizontalAlignment="Center" Foreground="Red" >删除帧</TextBlock>
                         </StackPanel>
                     </Button>
-                    </ToolBar>
-                    <ToolBar>
+                </ToolBar>
+                <ToolBar>
                     <Button Width="Auto" Height="25" Margin="3" Click="GoHomeClick">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Center">回起点</TextBlock>
+                            <TextBlock HorizontalAlignment="Center">复位</TextBlock>
                         </StackPanel>
                     </Button>
                     <Button Width="Auto" Height="25" Margin="3" Click="PlayClick">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Center">播放</TextBlock>
-                        </StackPanel>
-                    </Button>
-                        </ToolBar>
-                        <ToolBar>
-                            <Button Width="Auto" Height="25" Margin="3" Click="SaveFileClick">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Center">保存</TextBlock>
-                        </StackPanel>
-                    </Button>
-                    <Button Width="Auto" Height="25" Margin="3" Click="ReadFileClick">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Center">读取</TextBlock>
+                            <TextBlock HorizontalAlignment="Center" Foreground="#FF2300FF">播放</TextBlock>
                         </StackPanel>
                     </Button>
                 </ToolBar>
@@ -128,7 +118,7 @@
                                         </Style>
                                     </Button.Style>
                                 </Button>
-                                <TextBlock Text="{Binding Name}" FontSize="16" Width="100" Margin="3" Foreground="#FFECE2E2" VerticalAlignment="Center" MouseLeftButtonDown="NameMouseLeftButtonDown"></TextBlock>
+                                <TextBlock Text="{Binding Name}" FontSize="16" Width="100" Margin="3" Foreground="#FFECE2E2" VerticalAlignment="Center"></TextBlock>
                                 <TextBlock Name="txtBlockIndex" Text="{Binding Index}" FontSize="16" MaxWidth="30" Margin="3" Foreground="#FFECE2E2" VerticalAlignment="Center"></TextBlock>
                                 <StackPanel Orientation="Horizontal" Margin="3" VerticalAlignment="Center">
                                     <Button Name="LeftMove" Width="25" Height="25" Margin="2" Background="#FF706C6C" PreviewMouseLeftButtonDown="ButtonMouseDown" PreviewMouseLeftButtonUp="ButtonMouseUp" IsEnabled="{Binding isEnable}">
@@ -177,6 +167,7 @@
                                     </Button.Content>
                                 </Button>
                                 <TextBlock Name="txtBlockPosition" Text="{Binding Position}" FontSize="16" Width="50" Margin="3" Foreground="#FFECE2E2" VerticalAlignment="Center" HorizontalAlignment="Right"></TextBlock>
+                                <TextBox Text="{Binding Path=Speed,UpdateSourceTrigger=PropertyChanged}" Name="SpeedTextBox" Margin="3" VerticalAlignment="Center" Width="65" TextChanged="SpeedTextBox_TextChanged" KeyDown="SpeedTextBox_KeyDown"></TextBox>
                                 <Button Width="25" Height="25" Margin="3" Background="#FF706C6C" Click="ClearClick" IsEnabled="{Binding isEnable}">
                                     <Button.Content>
                                         <Image Stretch="Fill" Source="Image/clear.png" />
@@ -218,7 +209,9 @@
                 </ListBox>
             </StackPanel>
             <DockPanel>
-                <ListView Width="100" Name="lstvKeyName" SelectionChanged="lstvKeyName_SelectionChanged" MouseDoubleClick="lstvKeyName_MouseDoubleClick">
+                <ListView ItemsSource="{Binding lstKeyName}" Name="lstvKeyName" Width="100" 
+                          SelectionChanged="lstvKeyName_SelectionChanged" MouseDoubleClick="lstvKeyName_MouseDoubleClick"
+                          AllowDrop="True" Drop="lstvKeyName_Drop" MouseMove="lstvKeyName_MouseMove">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="80" Header="关键帧">
@@ -226,7 +219,7 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <ListView MinWidth="150" Name="lstvKeyData">
+                <ListView ItemsSource="{Binding lstKeyData}" Name="lstvKeyData" MinWidth="150" >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="80" Header="名字">
