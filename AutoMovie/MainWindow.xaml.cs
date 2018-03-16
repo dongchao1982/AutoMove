@@ -324,14 +324,9 @@ namespace AutoMovie
                 int idx = lstvKeyName.SelectedIndex;
                 foreach (Motor motor in m_TimeLineControl.getMotors())
                 {
-                    TimeLineKey key = new TimeLineKey();
-                    key.Speed = motor.Speed;
-                    key.Position = motor.Position;
-
                     TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
-                    model.update(idx,key);
+                    model.update(idx,motor.Position,motor.Speed);
                 }
-
                 updateUI();
             }
         }
@@ -578,14 +573,17 @@ namespace AutoMovie
                     string item = peopleList[0] as string;
                     //拖动元素集合的第一个元素索引
                     int OldFirstIndex = Model().lstKeyName.IndexOf(item);
-                    //交换数据
-                    Model().lstKeyName.Move(OldFirstIndex, index);
-                    foreach (Motor motor in m_TimeLineControl.getMotors())
+                    if (OldFirstIndex != index)
                     {
-                        TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
-                        model.move(OldFirstIndex, index);
+                        //交换数据
+                        Model().lstKeyName.Move(OldFirstIndex, index);
+                        foreach (Motor motor in m_TimeLineControl.getMotors())
+                        {
+                            TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
+                            model.move(OldFirstIndex, index);
+                        }
+                        updateUI();
                     }
-                    updateUI();
                 }
             }
         }

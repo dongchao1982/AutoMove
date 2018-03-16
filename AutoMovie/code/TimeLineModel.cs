@@ -39,13 +39,8 @@ namespace AutoMovie
             if(oldIndex>=0 && oldIndex<m_lstKeys.Count && newIndex >= 0 && newIndex < m_lstKeys.Count)
             {
                 TimeLineKey key = m_lstKeys[oldIndex];
-                TimeLineKey newKey = new TimeLineKey();
-                newKey.Name = key.Name;
-                newKey.Position = key.Position;
-                newKey.Speed = key.Speed;
-                newKey.Time = 0;
-                m_lstKeys.Insert(newIndex, newKey);
-                m_lstKeys.Remove(key);
+                m_lstKeys.RemoveAt(oldIndex);
+                m_lstKeys.Insert(newIndex, key);
 
                 m_lstKeys[0].Time = 0;
                 for (int i = 1; i < m_lstKeys.Count; ++i)
@@ -75,11 +70,13 @@ namespace AutoMovie
             return null;
         }
 
-        public void update(int index, TimeLineKey key)
+        public void update(int index, int pos,int speed)
         {
             if(index >=0 && index<m_lstKeys.Count)
             {
-                m_lstKeys[index] = key;
+                TimeLineKey key = m_lstKeys[index];
+                key.Position = pos;
+                key.Speed = speed;
             }
         }
 

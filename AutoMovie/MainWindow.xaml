@@ -60,7 +60,7 @@
                     </DockPanel>
                 </TabItem>
             </TabControl>
-            <StackPanel DockPanel.Dock="Left" Margin="3" Width="555" HorizontalAlignment="Left" >
+            <StackPanel DockPanel.Dock="Left" Margin="3" Width="560" HorizontalAlignment="Left" >
                 <ToolBar>
                     <Button Width="Auto" Height="25" Margin="3" Click="AddKeyClick">
                         <StackPanel Orientation="Horizontal">
@@ -243,7 +243,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Width="80" Header="速度">
+                            <GridViewColumn Width="80" Header="时间">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Time}"></TextBlock>
