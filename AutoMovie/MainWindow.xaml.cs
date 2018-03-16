@@ -585,6 +585,7 @@ namespace AutoMovie
                         TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
                         model.move(OldFirstIndex, index);
                     }
+                    updateUI();
                 }
             }
         }
