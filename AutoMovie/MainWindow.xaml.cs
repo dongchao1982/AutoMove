@@ -200,10 +200,6 @@ namespace AutoMovie
             }
         }
 
-        private void MotorSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-        }
-
         private void RefreshPortClick(object sender, RoutedEventArgs e)
         {
             refreshPort();
@@ -284,12 +280,13 @@ namespace AutoMovie
         {
             foreach(Motor motor in m_TimeLineControl.getMotors())
             {
+                TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
+
                 TimeLineKey key = new TimeLineKey();
                 key.Name = motor.Name;
                 key.Speed = motor.Speed;
                 key.Position = motor.Position;
-
-                TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
+                
                 model.add(key);
             }
 
@@ -586,9 +583,7 @@ namespace AutoMovie
                     foreach (Motor motor in m_TimeLineControl.getMotors())
                     {
                         TimeLineModel model = m_TimeLineControl.getTimeLineModel(motor);
-                        TimeLineKey oldKey = model.gets()[OldFirstIndex];
-                        model.gets()[OldFirstIndex] = model.gets()[index];
-                        model.gets()[index] = oldKey;
+                        model.move(OldFirstIndex, index);
                     }
                 }
             }

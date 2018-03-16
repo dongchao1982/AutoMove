@@ -11,5 +11,6 @@ namespace AutoMovie
         public String Name { get; set; }
         public int Speed { get; set; }
         public int Position { get; set; }
+        public double Time { get; set; }
     }
 }

@@ -90,7 +90,7 @@
                         </StackPanel>
                     </Button>
                 </ToolBar>
-                <ListBox ItemsSource="{Binding .}" Name="lstboxMotor" SelectionChanged="MotorSelectionChanged">
+                <ListBox ItemsSource="{Binding .}" Name="lstboxMotor">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Name="itemPanel" Tag="{Binding Name}" Orientation="Horizontal" >
@@ -240,6 +240,13 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Speed}"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="80" Header="速度">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Time}"></TextBlock>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
